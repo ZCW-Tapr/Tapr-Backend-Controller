@@ -1,0 +1,77 @@
+graph TB
+    subgraph "Mobile App (React Native)"
+        A1[Gesture Configuration UI]
+        A3[Device Manager UI]
+        A4[Live Status Dashboard]
+    end
+
+    subgraph "Raspberry Pi"
+        subgraph "Python Layer"
+            P1[Trackpad Listener]
+            P2[Gesture Detector]
+        end
+
+        subgraph "Spring Boot API"
+            C1[Gesture Controller]
+            C2[Action Controller]
+            C3[Device Controller]
+
+            S1[Gesture Service]
+            S2[Action Service]
+            S3[Device Service]
+            S5[Govee API Service]
+
+            DB[(SQLite Database)]
+        end
+    end
+
+    subgraph "Smart Devices"
+        D1[Govee Light Bulb]
+        D2[Govee Humidifier]
+        D3[Other Smart Devices]
+    end
+
+    subgraph "Network Layer"
+        N1{WiFi/Bluetooth Router}
+    end
+
+    %% Mobile to API
+    A1 -->|HTTP/REST| C1
+    A3 -->|HTTP/REST| C3
+    A4 -->|HTTP/REST| C1
+
+    %% Trackpad to API
+    P1 -->|USB Events| P2
+    P2 -->|HTTP POST| C1
+
+    %% Controllers to Services
+    C1 --> S1
+    C2 --> S2
+    C3 --> S3
+    C4 --> S4
+
+    %% Services Layer
+    S1 --> S2
+    S2 --> S3
+    S2 --> S5
+
+    %% Services to Database
+    S1 --> DB
+    S2 --> DB
+    S3 --> DB
+
+    %% API to Devices
+    S5 -->|WiFi API| N1
+    N1 -->|WiFi| D1
+    N1 -->|WiFi| D2
+    N1 -->|WiFi/BT| D3
+
+    %% Fallback Path
+    S5 -.->|Bluetooth Fallback| D1
+    S5 -.->|Bluetooth Fallback| D2
+
+    style P1 fill:#e1f5ff
+    style P2 fill:#e1f5ff
+    style DB fill:#fff4e1
+    style N1 fill:#f0f0f0
+    style S5 fill:#ffe1f5

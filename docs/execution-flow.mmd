@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant User
+    participant Trackpad
+    participant Python
+    participant API
+    participant Service
+    participant DB
+    participant Govee
+
+    Note over User,Govee: Scenario: User performs double tap to toggle light
+
+    User->>Trackpad: Double tap (1 finger)
+    Trackpad->>Python: Raw input events
+    Python->>Python: Detect gesture pattern
+    Python->>API: POST /gestures/execute<br/>{"gesture": "DOUBLE_TAP"}
+
+    API->>Service: processGesture("DOUBLE_TAP")
+    Service->>DB: SELECT * FROM gesture_rules<br/>WHERE gesture_name = "DOUBLE_TAP"
+    DB-->>Service: GestureRule (action_id: 5)
+
+    Service->>DB: SELECT * FROM actions WHERE id = 5
+    DB-->>Service: Action (type: "LIGHT", light_action_id: 2)
+
+    Service->>DB: SELECT * FROM light_actions WHERE id = 2
+    DB-->>Service: LightAction (operation: "TOGGLE", device_id: 1)
+
+    Service->>Govee: Toggle light command for device_id: 1
+    Govee-->>Service: Success (Light toggled ON)
+
+    Service-->>API: Execution result
+    API-->>Python: 200 OK {"status": "success"}
+    Python-->>User: Visual/haptic feedback (optional)
+
+    Note over User,Govee: Light is now toggled (ON/OFF)
