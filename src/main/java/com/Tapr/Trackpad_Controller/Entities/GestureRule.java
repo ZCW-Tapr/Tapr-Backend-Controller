@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,10 +31,10 @@ public class GestureRule{
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
 
-    //Automatically manages creation and update.
+    //Automatically manages creation and update timestamps.
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
