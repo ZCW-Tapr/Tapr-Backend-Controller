@@ -21,8 +21,18 @@ public class Device {
     private String deviceType;
     private String ipAddress;
     private String macAddress;
-    private Boolean isOnline;
+    private Boolean isOnline = false;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastSeen;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        lastSeen = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastSeen = LocalDateTime.now();
+    }
 }

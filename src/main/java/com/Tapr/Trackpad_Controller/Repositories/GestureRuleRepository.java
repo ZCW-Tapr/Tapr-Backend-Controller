@@ -16,5 +16,6 @@ public interface GestureRuleRepository extends JpaRepository<GestureRule, Long>{
     // Find all enabled gestures
     List<GestureRule> findByEnabled(Boolean enabled);
 
-
+//    // Find gestures by finger count
+//    List<GestureRule> findByFingerCount(Integer count);
 }
