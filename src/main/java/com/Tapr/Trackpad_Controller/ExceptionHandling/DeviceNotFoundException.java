@@ -1,4 +1,4 @@
-package com.Tapr.Trackpad_Controller;
+package com.Tapr.Trackpad_Controller.ExceptionHandling;
 
 public class DeviceNotFoundException extends RuntimeException{
 

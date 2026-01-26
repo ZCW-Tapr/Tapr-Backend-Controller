@@ -1,6 +1,6 @@
 package com.Tapr.Trackpad_Controller.Controllers;
 
-import com.Tapr.Trackpad_Controller.DeviceNotFoundException;
+import com.Tapr.Trackpad_Controller.ExceptionHandling.DeviceNotFoundException;
 import com.Tapr.Trackpad_Controller.Entities.Device;
 import com.Tapr.Trackpad_Controller.Repositories.DeviceRepository;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +50,6 @@ class DeviceController {
                 });
     }
 
-    //DELETE API -> Remove device by ID
     @DeleteMapping("/{id}")
     void deleteDevice(@PathVariable Long id) {
         repository.deleteById(id);

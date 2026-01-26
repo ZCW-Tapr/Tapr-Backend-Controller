@@ -1,4 +1,4 @@
-package com.Tapr.Trackpad_Controller;
+package com.Tapr.Trackpad_Controller.ExceptionHandling;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
