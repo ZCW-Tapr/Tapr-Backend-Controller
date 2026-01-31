@@ -16,8 +16,7 @@ public class ActionService {
     private final LightActionRepository lightActionRepository;
     private final DeviceRepository deviceRepository;
 
-    //default constructor
-    public ActionService(){}
+
 
     public ActionService(ActionRepository actionRepository, LightActionRepository lightActionRepository, DeviceRepository deviceRepository) {
         this.actionRepository = actionRepository;
