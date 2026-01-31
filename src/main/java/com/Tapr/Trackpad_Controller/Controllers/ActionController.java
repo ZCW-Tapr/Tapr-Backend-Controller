@@ -1,8 +1,10 @@
 package com.Tapr.Trackpad_Controller.Controllers;
 
+import com.Tapr.Trackpad_Controller.DataTransferObject.ActionDTO;
 import com.Tapr.Trackpad_Controller.Entities.Action;
 import com.Tapr.Trackpad_Controller.ExceptionHandling.ActionNotFoundException;
 import com.Tapr.Trackpad_Controller.Repositories.ActionRepository;
+import com.Tapr.Trackpad_Controller.Services.ActionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,13 +12,15 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/action")
+@RequestMapping("/actions")
 public class ActionController {
 
     private final ActionRepository repository;
+    private final ActionService service;
 
-    public ActionController(ActionRepository repository) {
+    public ActionController(ActionRepository repository, ActionService service) {
         this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping
@@ -25,8 +29,8 @@ public class ActionController {
     }
 
     @PostMapping
-    Action newAction(@RequestBody Action newAction) {
-        return repository.save(newAction);
+    Action newAction(@RequestBody ActionDTO newActionDTO) {
+        return service.createActionWithLightAction(newActionDTO);
     }
 
     @GetMapping("/{id}")
