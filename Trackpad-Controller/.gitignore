@@ -32,6 +32,3 @@ build/
 ### VS Code ###
 .vscode/
 /docs/API Reference/
-
-### Govee Api information ###
-/src/main/resources/application-local.properties
