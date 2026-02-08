@@ -1,17 +1,17 @@
-package com.Tapr.Trackpad_Controller.GoveeApiModels;
-
+package com.Tapr.Trackpad_Controller.DataTransferObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tools.jackson.databind.JsonNode;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CapabilityData {
+public class GoveeControlCapability {
 
     private String type;
     private String instance;
-    private JsonNode parameters;
+
+    //Using Object to handle different types
+    private Object value;
 }

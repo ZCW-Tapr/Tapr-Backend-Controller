@@ -35,3 +35,6 @@ build/
 
 ### Govee Api information ###
 /src/main/resources/application-local.properties
+
+### Claude Code Markdown file
+/CLAUDE.md
