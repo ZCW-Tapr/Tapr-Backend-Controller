@@ -31,10 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
-/docs/API Reference/
 
 ### Govee Api information ###
 /src/main/resources/application-local.properties
 
 ### Claude Code Markdown file
 /CLAUDE.md
+
+### Misc Files ###
+#/docs/Notes - Humidifier JSON examples
+/docs/API Reference/
+/docs/Notes - Smart Light Bulb JSON examples
+/docs/Notes - Humidifier JSON examples.txt

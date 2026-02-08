@@ -1,6 +1,8 @@
 package com.Tapr.Trackpad_Controller.Services;
 
-import com.Tapr.Trackpad_Controller.DataTransferObject.GoveeControlRequest;
+import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlRequest;
+import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStatePayload;
+import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStateRequest;
 import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,17 @@ public class GoveeApiService {
                 .header("Govee-API-Key", apiKey)
                 .header("Content-Type", "application/json")
                 .body(controlRequest)
+                .retrieve()
+                .body(GoveeResponse.class);
+    }
+
+    //For Getting the state of devices
+    public GoveeResponse getDeviceState(GoveeStateRequest stateRequest){
+        return restClient.post()
+                .uri(GOVEE_BASE_URL + "/device/state")
+                .header("Govee-API-Key", apiKey)
+                .header("Content-Type", "application/json")
+                .body(stateRequest)
                 .retrieve()
                 .body(GoveeResponse.class);
     }

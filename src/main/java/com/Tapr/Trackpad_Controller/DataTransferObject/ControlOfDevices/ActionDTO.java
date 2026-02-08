@@ -1,4 +1,4 @@
-package com.Tapr.Trackpad_Controller.DataTransferObject;
+package com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices;
 
 import lombok.Data;
 

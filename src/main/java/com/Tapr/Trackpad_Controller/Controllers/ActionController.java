@@ -1,6 +1,6 @@
 package com.Tapr.Trackpad_Controller.Controllers;
 
-import com.Tapr.Trackpad_Controller.DataTransferObject.ActionDTO;
+import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.ActionDTO;
 import com.Tapr.Trackpad_Controller.Entities.Action;
 import com.Tapr.Trackpad_Controller.ExceptionHandling.ActionNotFoundException;
 import com.Tapr.Trackpad_Controller.Repositories.ActionRepository;

@@ -1,6 +1,7 @@
 package com.Tapr.Trackpad_Controller.Controllers;
 
-import com.Tapr.Trackpad_Controller.DataTransferObject.GoveeControlRequest;
+import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlRequest;
+import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStateRequest;
 import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import com.Tapr.Trackpad_Controller.Services.GoveeApiService;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,11 @@ public class GoveeController {
     @PostMapping ("/control")
     GoveeResponse controlDevice(@RequestBody GoveeControlRequest controlRequest){
         return goveeApiService.controlDevice(controlRequest);
+    }
+
+    @PostMapping ("/state")
+    GoveeResponse deviceState(@RequestBody GoveeStateRequest stateRequest){
+        return goveeApiService.getDeviceState(stateRequest);
     }
 
 }
