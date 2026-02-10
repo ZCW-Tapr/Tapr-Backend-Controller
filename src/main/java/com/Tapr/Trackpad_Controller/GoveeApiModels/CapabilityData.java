@@ -14,4 +14,5 @@ public class CapabilityData {
     private String type;
     private String instance;
     private JsonNode parameters;
+    private JsonNode state;
 }
