@@ -42,3 +42,12 @@ build/
 #/docs/Notes - Humidifier JSON examples
 /docs/API Reference/
 /docs/Notes: JSON Bodies Examples/
+
+### Files that will be untracked
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/Services/ActionService.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/Repositories/LightActionRepository.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/Repositories/ActionRepository.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/ExceptionHandling/ActionNotFoundException.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/ExceptionHandling/ActionNotFoundAdvice.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/Entities/LightAction.java
+/home/gcruzdev/Projects/Tapr/src/main/java/com/Tapr/Trackpad_Controller/Entities/Action.java

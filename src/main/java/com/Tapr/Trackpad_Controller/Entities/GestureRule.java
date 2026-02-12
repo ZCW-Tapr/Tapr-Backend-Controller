@@ -5,36 +5,41 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+/**
+ * This is no longer attached to a singular action. This gives the user the
+ * flexibility to control multiple devices with one gesture.
+ */
 @Entity
 @Table(name = "gesture_rules")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GestureRule{
+public class GestureRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "action_id")
-    private Action action;
-
+    @Column(nullable = false)
     private String gestureName;
+
+    @Column(nullable = false)
     private String gestureType;
-    private Boolean enabled;
+
+    private Boolean enabled = true;
+
+    @OneToMany(mappedBy = "gestureRule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeviceCommand> deviceCommands;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
-
-    //Automatically manages creation and update timestamps.
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

@@ -17,12 +17,21 @@ public class DeviceCommand {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "gesture_rule_id")
+    @JoinColumn(name = "gesture_rule_id", nullable = false)
     private GestureRule gestureRule;
 
+    @Column(nullable = false)
     private String sku;
+
+    @Column(nullable = false)
     private String device;
+
+    @Column(nullable = false)
     private String capabilityType;
+
+    @Column(nullable = false)
     private String capabilityInstance;
+
+    @Column(nullable = false)
     private String value;
 }

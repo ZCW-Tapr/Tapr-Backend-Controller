@@ -3,8 +3,7 @@ package com.Tapr.Trackpad_Controller.Controllers;
 import com.Tapr.Trackpad_Controller.Entities.GestureRule;
 import com.Tapr.Trackpad_Controller.ExceptionHandling.GestureRuleNotFoundException;
 import com.Tapr.Trackpad_Controller.Repositories.GestureRuleRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,9 +40,9 @@ public class GestureController {
         return repository.findById(id)
                 .map(gestureRule -> {
                     gestureRule.setGestureName(newGestureRule.getGestureName());
-                    gestureRule.setAction(newGestureRule.getAction());
                     gestureRule.setGestureType(newGestureRule.getGestureType());
                     gestureRule.setEnabled(newGestureRule.getEnabled());
+                    gestureRule.setDeviceCommands(newGestureRule.getDeviceCommands());
                     return repository.save(gestureRule);
                 })
                 .orElseGet(() -> {
