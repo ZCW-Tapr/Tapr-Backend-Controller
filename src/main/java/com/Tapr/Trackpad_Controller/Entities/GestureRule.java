@@ -29,6 +29,9 @@ public class GestureRule {
     @Column(nullable = false)
     private String gestureType;
 
+    @Column(nullable = false)
+    private Integer fingerCount;
+
     private Boolean enabled = true;
 
     @OneToMany(mappedBy = "gestureRule", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,6 +42,7 @@ public class GestureRule {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
 
     @PrePersist
     protected void onCreate() {
