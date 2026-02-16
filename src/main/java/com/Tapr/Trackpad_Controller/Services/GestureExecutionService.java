@@ -5,6 +5,7 @@ import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeCon
 import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlRequest;
 import com.Tapr.Trackpad_Controller.Entities.DeviceCommand;
 import com.Tapr.Trackpad_Controller.Entities.GestureRule;
+import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import com.Tapr.Trackpad_Controller.Repositories.GestureRuleRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class GestureExecutionService {
         if (!rule.getEnabled()) {
             return;
         }
+
 
         //Loop through device commands and fire each one
         for (DeviceCommand command : rule.getDeviceCommands()) {
@@ -60,7 +62,8 @@ public class GestureExecutionService {
             request.setPayload(payload);
 
             //Send to Govee
-            goveeApiService.controlDevice(request);
-        }
+            System.out.println("Sending command to device: " + command.getSku() + " " + command.getDevice() + " value: " + capability.getValue());
+            GoveeResponse response = goveeApiService.controlDevice(request);
+            System.out.println("Govee response: " + response);        }
     }
 }

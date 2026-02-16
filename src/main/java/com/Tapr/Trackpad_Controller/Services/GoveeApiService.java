@@ -1,7 +1,6 @@
 package com.Tapr.Trackpad_Controller.Services;
 
 import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlRequest;
-import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStatePayload;
 import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStateRequest;
 import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +31,7 @@ public class GoveeApiService {
                 .retrieve()
                 .body(GoveeResponse.class);
     }
+
 
     //For controlling the devices
     public GoveeResponse controlDevice(GoveeControlRequest controlRequest) {

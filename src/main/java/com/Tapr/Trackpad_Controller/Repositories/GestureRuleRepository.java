@@ -2,6 +2,8 @@ package com.Tapr.Trackpad_Controller.Repositories;
 
 import com.Tapr.Trackpad_Controller.Entities.GestureRule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +19,6 @@ public interface GestureRuleRepository extends JpaRepository<GestureRule, Long>{
     List<GestureRule> findByEnabled(Boolean enabled);
 
     // Find gestures by finger count
-    Optional<GestureRule> findByFingerCountAndGestureType(Integer count, String gestureType);
+    @Query("SELECT g FROM GestureRule g LEFT JOIN FETCH g.deviceCommands WHERE g.fingerCount = :fingerCount AND g.gestureType = :gestureType")
+    Optional<GestureRule> findByFingerCountAndGestureType(@Param("fingerCount") Integer fingerCount, @Param("gestureType") String gestureType);
 }

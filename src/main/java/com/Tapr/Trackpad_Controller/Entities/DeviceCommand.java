@@ -1,5 +1,6 @@
 package com.Tapr.Trackpad_Controller.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,9 @@ public class DeviceCommand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "gesture_rule_id", nullable = false)
+    @JoinColumn(name = "gesture_rule_id")
     private GestureRule gestureRule;
 
     @Column(nullable = false)

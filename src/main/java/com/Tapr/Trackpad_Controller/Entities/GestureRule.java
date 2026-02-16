@@ -1,5 +1,6 @@
 package com.Tapr.Trackpad_Controller.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,9 @@ import java.util.List;
  * flexibility to control multiple devices with one gesture.
  */
 @Entity
-@Table(name = "gesture_rules")
+@Table(name = "gesture_rules", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"finger_count", "gesture_type"})
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,6 +37,7 @@ public class GestureRule {
 
     private Boolean enabled = true;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "gestureRule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeviceCommand> deviceCommands;
 
