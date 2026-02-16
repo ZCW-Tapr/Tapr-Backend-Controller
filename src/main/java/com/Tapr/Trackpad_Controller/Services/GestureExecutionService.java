@@ -64,6 +64,9 @@ public class GestureExecutionService {
             //Send to Govee
             System.out.println("Sending command to device: " + command.getSku() + " " + command.getDevice() + " value: " + capability.getValue());
             GoveeResponse response = goveeApiService.controlDevice(request);
-            System.out.println("Govee response: " + response);        }
+
+            //Used for Debugging
+//            System.out.println("Govee response: " + response);
+        }
     }
 }
