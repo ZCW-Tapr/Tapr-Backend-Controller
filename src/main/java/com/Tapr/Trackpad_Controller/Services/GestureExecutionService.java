@@ -3,8 +3,11 @@ package com.Tapr.Trackpad_Controller.Services;
 import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlCapability;
 import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlPayload;
 import com.Tapr.Trackpad_Controller.DataTransferObject.ControlOfDevices.GoveeControlRequest;
+import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStatePayload;
+import com.Tapr.Trackpad_Controller.DataTransferObject.GetDeviceState.GoveeStateRequest;
 import com.Tapr.Trackpad_Controller.Entities.DeviceCommand;
 import com.Tapr.Trackpad_Controller.Entities.GestureRule;
+import com.Tapr.Trackpad_Controller.GoveeApiModels.CapabilityData;
 import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import com.Tapr.Trackpad_Controller.Repositories.GestureRuleRepository;
 import org.springframework.stereotype.Service;
@@ -46,8 +49,31 @@ public class GestureExecutionService {
                 // Slide gesture — use the value from the Pi
                 capability.setValue(Integer.parseInt(value));
             } else {
-                // Tap gesture — use the value stored in the database
-                capability.setValue(Integer.parseInt(command.getValue()));
+                String storedValue = command.getValue();
+
+                // Toggle logic — query current state and send opposite
+                if (storedValue.equals("0") || storedValue.equals("1")) {
+                    GoveeStateRequest stateRequest = new GoveeStateRequest();
+                    stateRequest.setRequestId(UUID.randomUUID().toString());
+                    GoveeStatePayload statePayload = new GoveeStatePayload();
+                    statePayload.setSku(command.getSku());
+                    statePayload.setDevice(command.getDevice());
+                    stateRequest.setPayload(statePayload);
+
+                    GoveeResponse stateResponse = goveeApiService.getDeviceState(stateRequest);
+
+                    int currentValue = 0;
+                    for (CapabilityData cap : stateResponse.getPayload().getCapabilities()) {
+                        if (cap.getInstance().equals(command.getCapabilityInstance())) {
+                            currentValue = cap.getState().get("value").asInt();
+                            break;
+                        }
+                    }
+
+                    capability.setValue(currentValue == 1 ? 0 : 1);
+                } else {
+                    capability.setValue(Integer.parseInt(storedValue));
+                }
             }
 
             //Build the payload
