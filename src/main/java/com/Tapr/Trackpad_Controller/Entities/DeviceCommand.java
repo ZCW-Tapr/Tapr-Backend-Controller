@@ -35,5 +35,5 @@ public class DeviceCommand {
     private String capabilityInstance;
 
     @Column(nullable = false)
-    private String value;
+    private String value = "0";
 }

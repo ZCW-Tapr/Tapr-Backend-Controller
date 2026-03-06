@@ -12,6 +12,7 @@ import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import com.Tapr.Trackpad_Controller.Repositories.GestureRuleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,6 +20,35 @@ public class GestureExecutionService {
 
     private final GestureRuleRepository gestureRuleRepository;
     private final GoveeApiService goveeApiService;
+    private int colorIndex = 0;
+    private final List<Integer> colorList = List.of(
+            16711680,  // Red
+            16728064,  // Red-Orange
+            16744448,  // Orange
+            16760576,  // Amber
+            16776960,  // Yellow
+            12582656,  // Yellow-Green
+            8388352,   // Lime
+            4259584,   // Chartreuse
+            65280,     // Green
+            65344,     // Green-Teal
+            65408,     // Teal
+            65471,     // Teal-Cyan
+            65535,     // Cyan
+            49151,     // Light Blue
+            32767,     // Sky Blue
+            16639,     // Azure
+            255,       // Blue
+            4194559,   // Blue-Violet
+            8388863,   // Violet
+            12517631,  // Purple
+            16711935,  // Magenta
+            16711871,  // Hot Pink
+            16711808,  // Rose
+            16711744,  // Crimson
+            16777215   // White
+    );
+
 
     public GestureExecutionService(GestureRuleRepository gestureRuleRepository, GoveeApiService goveeApiService) {
         this.gestureRuleRepository = gestureRuleRepository;
@@ -53,7 +83,7 @@ public class GestureExecutionService {
                 if ("brightness".equals(command.getCapabilityInstance())) {
                     calculateNewBrightness(value, command, capability);
                 } else if ("colorRgb".equals(command.getCapabilityInstance())) {
-                    // TODO: color cycling logic
+                cycleColor(value, capability);
                 }
             }
             else {
@@ -132,5 +162,14 @@ public class GestureExecutionService {
         int newBrightness = Math.max(1, Math.min(100, currentBrightness + delta));
 
         capability.setValue(newBrightness);
+    }
+
+    private void cycleColor(String value, GoveeControlCapability capability) {
+        int direction = Integer.parseInt(value);
+        colorIndex = (colorIndex + direction) % colorList.size();
+        if (colorIndex < 0) {
+            colorIndex += colorList.size();
+        }
+        capability.setValue(colorList.get(colorIndex));
     }
 }
