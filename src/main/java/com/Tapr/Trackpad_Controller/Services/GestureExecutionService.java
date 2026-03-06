@@ -45,10 +45,18 @@ public class GestureExecutionService {
             capability.setType(command.getCapabilityType());
             capability.setInstance(command.getCapabilityInstance());
 
+//            if (value != null) {
+//                // Slide gesture — use the value from the Pi
+//                capability.setValue(Integer.parseInt(value));
+//            }
             if (value != null) {
-                // Slide gesture — use the value from the Pi
-                capability.setValue(Integer.parseInt(value));
-            } else {
+                if ("brightness".equals(command.getCapabilityInstance())) {
+                    calculateNewBrightness(value, command, capability);
+                } else if ("colorRgb".equals(command.getCapabilityInstance())) {
+                    // TODO: color cycling logic
+                }
+            }
+            else {
                 String storedValue = command.getValue();
 
                 // Toggle logic — query current state and send opposite
@@ -94,5 +102,35 @@ public class GestureExecutionService {
 //            Used for Debugging
             System.out.println("Govee response: " + response);
         }
+    }
+
+    private void calculateNewBrightness(String value, DeviceCommand command, GoveeControlCapability capability) {
+        // Step 1: Query current device state (same pattern as your toggle logic)
+        GoveeStateRequest stateRequest = new GoveeStateRequest();
+        stateRequest.setRequestId(UUID.randomUUID().toString());
+        GoveeStatePayload statePayload = new GoveeStatePayload();
+        statePayload.setSku(command.getSku());
+        statePayload.setDevice(command.getDevice());
+        stateRequest.setPayload(statePayload);
+
+        GoveeResponse stateResponse = goveeApiService.getDeviceState(stateRequest);
+
+        // Step 2: Find current brightness from the response
+        int currentBrightness = 50; // default fallback
+        if (stateResponse.getPayload() != null
+                && stateResponse.getPayload().getCapabilities() != null) {
+            for (var cap : stateResponse.getPayload().getCapabilities()) {
+                if ("brightness".equals(cap.getInstance())) {
+                    currentBrightness = cap.getState().get("value").intValue();
+                    break;
+                }
+            }
+        }
+
+        // Step 3: Apply delta and clamp between 1-100
+        int delta = Integer.parseInt(value);
+        int newBrightness = Math.max(1, Math.min(100, currentBrightness + delta));
+
+        capability.setValue(newBrightness);
     }
 }

@@ -15,7 +15,7 @@ public class GoveeApiService {
     @Value("${govee.api.key}")
     private String apiKey;
 
-    private static final String GOVEE_BASE_URL =  "https://openapi.api.govee.com/router/api/v1";
+    private static final String GOVEE_BASE_URL = "https://openapi.api.govee.com/router/api/v1";
 
     //Constructor
     public GoveeApiService(RestClient restClient) {
