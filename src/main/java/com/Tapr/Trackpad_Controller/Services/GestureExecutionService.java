@@ -103,8 +103,11 @@ public class GestureExecutionService {
                     int currentValue = 0;
                     for (CapabilityData cap : stateResponse.getPayload().getCapabilities()) {
                         if (cap.getInstance().equals(command.getCapabilityInstance())) {
-                            currentValue = cap.getState().get("value").asInt();
-                            break;
+                            try {
+                                currentValue = cap.getState().get("value").asInt();
+                            } catch (Exception e) {
+                                currentValue = 0;
+                            }                            break;
                         }
                     }
 
@@ -151,8 +154,11 @@ public class GestureExecutionService {
                 && stateResponse.getPayload().getCapabilities() != null) {
             for (var cap : stateResponse.getPayload().getCapabilities()) {
                 if ("brightness".equals(cap.getInstance())) {
-                    currentBrightness = cap.getState().get("value").intValue();
-                    break;
+                    try {
+                        currentBrightness = cap.getState().get("value").intValue();
+                    } catch (Exception e) {
+                        currentBrightness = 50;
+                    }                    break;
                 }
             }
         }
