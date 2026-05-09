@@ -75,10 +75,7 @@ public class GestureExecutionService {
             capability.setType(command.getCapabilityType());
             capability.setInstance(command.getCapabilityInstance());
 
-//            if (value != null) {
-//                // Slide gesture — use the value from the Pi
-//                capability.setValue(Integer.parseInt(value));
-//            }
+
             if (value != null) {
                 if ("brightness".equals(command.getCapabilityInstance())) {
                     calculateNewBrightness(value, command, capability);
@@ -134,6 +131,16 @@ public class GestureExecutionService {
 
 //            Used for Debugging
             System.out.println("Govee response: " + response);
+
+            // Dramatic 500ms cascade — only for the two-finger double-tap "toggle all" gesture
+            if (fingerCount == 2 && "double_tap".equals(gestureType)) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
         }
     }
 
