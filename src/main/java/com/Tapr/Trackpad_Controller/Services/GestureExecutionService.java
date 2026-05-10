@@ -11,6 +11,8 @@ import com.Tapr.Trackpad_Controller.GoveeApiModels.CapabilityData;
 import com.Tapr.Trackpad_Controller.GoveeApiModels.GoveeResponse;
 import com.Tapr.Trackpad_Controller.Repositories.GestureRuleRepository;
 import org.springframework.stereotype.Service;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,11 @@ public class GestureExecutionService {
 
     private final GestureRuleRepository gestureRuleRepository;
     private final GoveeApiService goveeApiService;
+    // In-memory cache of last-known state for toggle operations.
+// Key: "<deviceMAC>:<capabilityInstance>" (e.g. "05:36:...:64:powerSwitch")
+// Value: last sent integer value (0 or 1)
+    private final Map<String, Integer> lastKnownState = new ConcurrentHashMap<>();
+
     private int colorIndex = 0;
     private final List<Integer> colorList = List.of(
             16711680,  // Red
@@ -48,6 +55,10 @@ public class GestureExecutionService {
             16711744,  // Crimson
             16777215   // White
     );
+
+    private String stateKey(DeviceCommand cmd) {
+        return cmd.getDevice() + ":" + cmd.getCapabilityInstance();
+    }
 
 
     public GestureExecutionService(GestureRuleRepository gestureRuleRepository, GoveeApiService goveeApiService) {
@@ -86,32 +97,46 @@ public class GestureExecutionService {
             else {
                 String storedValue = command.getValue();
 
-                // Toggle logic — query current state and send opposite
+                // Toggle logic — use cached state when available, query only on first encounter
                 if (storedValue.equals("0") || storedValue.equals("1")) {
-                    GoveeStateRequest stateRequest = new GoveeStateRequest();
-                    stateRequest.setRequestId(UUID.randomUUID().toString());
-                    GoveeStatePayload statePayload = new GoveeStatePayload();
-                    statePayload.setSku(command.getSku());
-                    statePayload.setDevice(command.getDevice());
-                    stateRequest.setPayload(statePayload);
+                    String key = stateKey(command);
+                    Integer cachedValue = lastKnownState.get(key);
+                    int currentValue;
 
-                    GoveeResponse stateResponse = goveeApiService.getDeviceState(stateRequest);
+                    if (cachedValue != null) {
+                        // We've toggled this before — use cached state, no API call needed
+                        currentValue = cachedValue;
+                        System.out.println("Cache hit for " + key + " — current value: " + currentValue);
+                    } else {
+                        // First time seeing this device — bootstrap by querying once
+                        System.out.println("Cache miss for " + key + " — querying state");
+                        GoveeStateRequest stateRequest = new GoveeStateRequest();
+                        stateRequest.setRequestId(UUID.randomUUID().toString());
+                        GoveeStatePayload statePayload = new GoveeStatePayload();
+                        statePayload.setSku(command.getSku());
+                        statePayload.setDevice(command.getDevice());
+                        stateRequest.setPayload(statePayload);
 
-                    int currentValue = 0;
-                    for (CapabilityData cap : stateResponse.getPayload().getCapabilities()) {
-                        if (cap.getInstance().equals(command.getCapabilityInstance())) {
-                            try {
-                                currentValue = cap.getState().get("value").asInt();
-                            } catch (Exception e) {
-                                currentValue = 0;
-                            }                            break;
+                        GoveeResponse stateResponse = goveeApiService.getDeviceState(stateRequest);
+                        currentValue = 0;
+                        for (CapabilityData cap : stateResponse.getPayload().getCapabilities()) {
+                            if (cap.getInstance().equals(command.getCapabilityInstance())) {
+                                try {
+                                    currentValue = cap.getState().get("value").asInt();
+                                } catch (Exception e) {
+                                    currentValue = 0;
+                                }
+                                break;
+                            }
                         }
                     }
 
-                    capability.setValue(currentValue == 1 ? 0 : 1);
+                    int newValue = currentValue == 1 ? 0 : 1;
+                    capability.setValue(newValue);
+                    lastKnownState.put(key, newValue);  // Remember what we set for next time
                 } else {
                     capability.setValue(Integer.parseInt(storedValue));
-                }
+                }break;
             }
 
             //Build the payload
