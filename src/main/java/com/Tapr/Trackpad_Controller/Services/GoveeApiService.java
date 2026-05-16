@@ -35,23 +35,34 @@ public class GoveeApiService {
 
     //For controlling the devices
     public GoveeResponse controlDevice(GoveeControlRequest controlRequest) {
-        return restClient.post()
+        long start = System.currentTimeMillis();
+        GoveeResponse response = restClient.post()
                 .uri(GOVEE_BASE_URL + "/device/control")
                 .header("Govee-API-Key", apiKey)
                 .header("Content-Type", "application/json")
                 .body(controlRequest)
                 .retrieve()
                 .body(GoveeResponse.class);
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println("[TIMING] controlDevice took " + elapsed + "ms - sku="
+                + controlRequest.getPayload().getSku()
+                + " device=" + controlRequest.getPayload().getDevice());
+        return response;
     }
 
-    //For Getting the state of devices
     public GoveeResponse getDeviceState(GoveeStateRequest stateRequest){
-        return restClient.post()
+        long start = System.currentTimeMillis();
+        GoveeResponse response = restClient.post()
                 .uri(GOVEE_BASE_URL + "/device/state")
                 .header("Govee-API-Key", apiKey)
                 .header("Content-Type", "application/json")
                 .body(stateRequest)
                 .retrieve()
                 .body(GoveeResponse.class);
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println("[TIMING] getDeviceState took " + elapsed + "ms — sku="
+                + stateRequest.getPayload().getSku()
+                + " device=" + stateRequest.getPayload().getDevice());
+        return response;
     }
 }
