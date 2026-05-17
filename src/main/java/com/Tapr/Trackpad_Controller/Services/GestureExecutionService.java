@@ -160,7 +160,7 @@ public class GestureExecutionService {
 
                 int newValue = currentValue == 1 ? 0 : 1;
                 capability.setValue(newValue);
-                // Cache update moved to after successful Govee response (see below)
+                lastKnownState.put(key, newValue);
             } else {
                 capability.setValue(Integer.parseInt(storedValue));
             }
@@ -179,13 +179,6 @@ public class GestureExecutionService {
         System.out.println("Sending command to device: " + command.getSku() + " " + command.getDevice() + " value: " + capability.getValue());
         GoveeResponse response = goveeApiService.controlDevice(request);
         System.out.println("Govee response: " + response);
-
-        // Cache update only happens here, after Govee confirms the call succeeded.
-        // If the call threw (timeout, error), we never reach this line and cache stays clean.
-        if (value == null && capability.getValue() instanceof Integer intValue
-                && (intValue == 0 || intValue == 1)) {
-            lastKnownState.put(stateKey(command), intValue);
-        }
     }
 
     private void calculateNewBrightness(String value, DeviceCommand command, GoveeControlCapability capability) {
