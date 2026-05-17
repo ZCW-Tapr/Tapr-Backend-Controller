@@ -136,7 +136,7 @@ public class GestureExecutionService {
                     lastKnownState.put(key, newValue);  // Remember what we set for next time
                 } else {
                     capability.setValue(Integer.parseInt(storedValue));
-                }break;
+                }
             }
 
             //Build the payload
