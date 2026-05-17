@@ -22,6 +22,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String json = message.getPayload();
+        System.out.println("[JAVA-RECEIVE] " + json);
         GestureEventDTO event = objectMapper.readValue(json, GestureEventDTO.class);
         gestureExecutionService.executeGesture(event.getFingerCount(), event.getGestureType(), event.getValue());
     }
